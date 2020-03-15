@@ -15,4 +15,29 @@ router.post('/create', function(req, res, next) {
   });
 });
 
+router.get('/get-non-verified-cases', function(req, res, next) {
+  COVIDCases.find({verified: false},(err, result) => {
+    if (err) {
+      return res.status(500).send({success: false, body: error});
+    }
+    else {
+      return res.send({success: true, body: result});
+    }
+  });
+});
+
+router.post('/update-verification-flag', function(req, res, next) {
+  if(!req.body._id) {
+    return res.status(500).send({success: false, body: 'Please Porvide Id Of Case'});
+  }
+  COVIDCases.findOneAndUpdate({_id: req.body._id},{$set: {verified: true}}, {new: true},(err, result) => {
+    if (err) {
+      return res.status(500).send({success: false, body: error});
+    }
+    else {
+      return res.send({success: true, body: result});
+    }
+  });
+});
+
 module.exports = router;
